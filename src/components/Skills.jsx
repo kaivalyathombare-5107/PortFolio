@@ -1,11 +1,18 @@
-import { useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import useReveal from '../hooks/useReveal.js';
 
-function SkillCard({ skill, visible, delayIndex, isOwner, onRemove }) {
+// Each card observes itself so cards animate in independently as they
+// scroll into view. This prevents the glitch where stopping mid-section
+// causes all cards to flash simultaneously because they all shared one
+// parent observer.
+function SkillCard({ skill, delayIndex, isOwner, onRemove }) {
+  const [ref, visible] = useReveal();
+
   return (
     <div
+      ref={ref}
       className={`skill-card reveal ${visible ? 'is-visible' : ''}`}
-      style={{ transitionDelay: visible ? `${delayIndex * 60}ms` : '0ms' }}
+      style={{ transitionDelay: visible ? `${delayIndex * 50}ms` : '0ms' }}
     >
       <div className="skill-head">
         <div>
@@ -102,7 +109,6 @@ export default function Skills({ skills, isOwner, onAddSkill, onRemoveSkill }) {
           <SkillCard
             key={skill.id || `${skill.name}-${i}`}
             skill={skill}
-            visible={visible}
             delayIndex={i}
             isOwner={isOwner}
             onRemove={(id) => {

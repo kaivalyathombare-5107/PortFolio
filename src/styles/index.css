@@ -167,48 +167,45 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* ============================================================================
-   SCROLL REVEAL — panels tilt/slide/scale into place like a level loading
-   in, triggered by useReveal() toggling .is-visible on enter/exit.
+   SCROLL REVEAL
+   Entry  → slides up from below + fades in (scrolling down, element rises).
+   Exit   → slides up out of frame + fades out (scrolling up, element leaves
+            above us — moves in the same direction as the scroll).
+   The transform is the same for both states; the direction of the transition
+   is governed by whether .is-visible is being added or removed.
    ============================================================================ */
 .reveal {
   opacity: 0;
-  transform: translateY(56px) scale(0.94) rotateX(6deg);
-  transform-origin: center bottom;
+  transform: translateY(48px) scale(0.96);
   will-change: opacity, transform;
   transition:
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reveal.is-visible {
   opacity: 1;
-  transform: translateY(0) scale(1) rotateX(0deg);
+  transform: translateY(0) scale(1);
 }
-.reveal-delay-1 { transition-delay: 0.08s; }
-.reveal-delay-2 { transition-delay: 0.16s; }
-.reveal-delay-3 { transition-delay: 0.24s; }
 
-/* Directional variants — apply alongside .reveal for panels that should
-   slide in from a side instead of straight up, so consecutive sections
-   don't all move identically (breaks the "printed page" sameness). */
-.reveal-left {
-  transform: translate(-64px, 24px) scale(0.95) rotateY(-8deg);
+/* Exit goes upward — when scrolling back up a section retreats in the
+   same direction the page is moving, which feels intentional rather than
+   glitchy. Transition is slightly faster so it's crisp, not laggy. */
+.reveal:not(.is-visible) {
+  transition:
+    opacity 0.45s cubic-bezier(0.4, 0, 1, 1),
+    transform 0.45s cubic-bezier(0.4, 0, 1, 1);
+  transform: translateY(-32px) scale(0.97);
 }
-.reveal-left.is-visible {
-  transform: translate(0, 0) scale(1) rotateY(0deg);
-}
-.reveal-right {
-  transform: translate(64px, 24px) scale(0.95) rotateY(8deg);
-}
-.reveal-right.is-visible {
-  transform: translate(0, 0) scale(1) rotateY(0deg);
-}
+
+.reveal-delay-1 { transition-delay: 0.07s; }
+.reveal-delay-2 { transition-delay: 0.14s; }
+.reveal-delay-3 { transition-delay: 0.21s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal,
-  .reveal-left,
-  .reveal-right {
+  .reveal {
     opacity: 1;
     transform: none;
+    transition: none;
   }
 }
 
