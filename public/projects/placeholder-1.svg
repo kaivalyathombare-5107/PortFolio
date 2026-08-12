@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#101116"/>
+  <circle cx="200" cy="150" r="120" fill="url(#g1)" opacity="0.6"/>
+  <defs>
+    <radialGradient id="g1"><stop offset="0%" stop-color="#8b7cf6"/><stop offset="100%" stop-color="#101116" stop-opacity="0"/></radialGradient>
+  </defs>
+  <text x="200" y="150" font-family="monospace" font-size="13" fill="#a3a3ab" text-anchor="middle">project screenshot</text>
+</svg>
