@@ -6,7 +6,7 @@
 <br/>
 
 <!-- Typing animation badge -->
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&pause=1000&color=5CE1E6&center=true&vCenter=true&width=600&lines=React+%2B+Vite+%2B+Vercel+Serverless;Dark+%26+Animated+Single-Page+Portfolio;Live+Edit+Mode+%E2%80%94+No+Redeploy+Needed;Scroll+%E2%80%94+Parallax+%E2%80%94+Game-like+Feel)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&pause=1000&color=5CE1E6&center=true&vCenter=true&width=600&lines=React+%2B+Vite+%2B+Vercel+Serverless;Dark+%26+Animated+Single-Page+Portfolio;Scroll+%E2%80%94+Parallax+%E2%80%94+Game-like+Feel)](https://git.io/typing-svg)
 
 <br/>
 
