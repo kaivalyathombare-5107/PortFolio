@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import useScrollProgress from './hooks/useScrollProgress.js';
 import Navbar from './components/Navbar.jsx';
 import Hero from './components/Hero.jsx';
 import About from './components/About.jsx';
@@ -37,6 +38,11 @@ export default function App() {
   const [saveError, setSaveError] = useState('');
 
   const isOwner = mode === 'owner';
+
+  // Continuously syncs scroll position onto CSS vars so the page reads as
+  // one long scrolling scene (parallax layers, HUD progress bar) instead
+  // of a stack of static sections.
+  useScrollProgress();
 
   // Load whatever is currently saved in the database on first render. If
   // nothing has been saved yet (or the database isn't attached), the
@@ -111,6 +117,14 @@ export default function App() {
 
   return (
     <>
+      <div className="scroll-hud" aria-hidden="true">
+        <div className="scroll-hud-fill" />
+      </div>
+      <div className="scroll-world" aria-hidden="true">
+        <span className="scroll-world-layer scroll-world-layer-1" />
+        <span className="scroll-world-layer scroll-world-layer-2" />
+        <span className="scroll-world-layer scroll-world-layer-3" />
+      </div>
       <Navbar profile={data.profile} isOwner={isOwner} />
       <Hero profile={data.profile} />
       <About profile={data.profile} isOwner={isOwner} onUpdateProfile={updateProfile} />
