@@ -179,7 +179,7 @@
   font-size: 0.95rem;
 }
 
-..hero-photo {
+.hero-photo {
   position: absolute;
   inset: 0;
   z-index: -1;
@@ -535,7 +535,7 @@
   border-color: var(--accent-cyan);
   box-shadow: 0 0 0 3px rgba(92, 225, 230, 0.15);
 }
-..form-field textarea { resize: vertical; min-height: 120px; }
+.form-field textarea { resize: vertical; min-height: 120px; }
 .section-heading-row {
   display: flex;
   align-items: flex-start;
