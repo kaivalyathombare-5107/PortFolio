@@ -3,7 +3,7 @@ import useReveal from '../hooks/useReveal.js';
 import Gallery from './Gallery.jsx';
 import { uploadImage } from '../lib/api.js';
 
-export default function PhotoGallery({ gallery, isOwner, onAddPhoto, onRemovePhoto }) {
+export default function PhotoGallery({ gallery, isOwner, onAddPhoto, onRemovePhoto, onReorderGallery }) {
   const [ref, visible] = useReveal();
   const [title, setTitle] = useState('');
   const [caption, setCaption] = useState('');
@@ -142,6 +142,8 @@ export default function PhotoGallery({ gallery, isOwner, onAddPhoto, onRemovePho
 
       <Gallery
         items={gallery}
+        isOwner={isOwner}
+        onReorder={onReorderGallery}
         renderCard={(item) => (
           <>
             <div className="card-media">
