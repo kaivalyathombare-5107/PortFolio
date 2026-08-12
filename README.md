@@ -364,7 +364,7 @@ If you build something cool with it, a ⭐ is always appreciated.
 **Built by [Kaivalya Thombare](https://www.linkedin.com/in/kaivalya-thombare-930a1b386)**
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/kaivalya-thombare-930a1b386)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/your-username)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/kaivalyathombare-5107)
 
 *Computer Engineering Student · Mumbai, India · Open to Opportunities*
 
