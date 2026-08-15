@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Analytics } from "@vercel/analytics/next";
 import useScrollProgress from './hooks/useScrollProgress.js';
 import Navbar from './components/Navbar.jsx';
 import Hero from './components/Hero.jsx';
