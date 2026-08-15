@@ -1,19 +1,27 @@
 import { useRef, useEffect, useState } from 'react';
 import useReveal from '../hooks/useReveal.js';
+import useDragReorder from '../hooks/useDragReorder.js';
 
 // Each card observes itself so cards animate in independently as they
 // scroll into view. This prevents the glitch where stopping mid-section
 // causes all cards to flash simultaneously because they all shared one
 // parent observer.
-function SkillCard({ skill, delayIndex, isOwner, onRemove }) {
+function SkillCard({ skill, delayIndex, isOwner, onRemove, dragProps, dropProps, isOver }) {
   const [ref, visible] = useReveal();
 
   return (
     <div
       ref={ref}
-      className={`skill-card reveal ${visible ? 'is-visible' : ''}`}
+      className={`skill-card reveal${visible ? ' is-visible' : ''}${isOwner ? ' draggable-card' : ''}${isOver ? ' drag-over' : ''}`}
       style={{ transitionDelay: visible ? `${delayIndex * 50}ms` : '0ms' }}
+      {...dragProps}
+      {...dropProps}
     >
+      {isOwner && (
+        <div className="drag-handle skill-drag-handle" aria-hidden="true">
+          <DragHandleIcon />
+        </div>
+      )}
       <div className="skill-head">
         <div>
           <div className="skill-name">{skill.name}</div>
@@ -29,12 +37,15 @@ function SkillCard({ skill, delayIndex, isOwner, onRemove }) {
   );
 }
 
-export default function Skills({ skills, isOwner, onAddSkill, onRemoveSkill }) {
+export default function Skills({ skills, isOwner, onAddSkill, onRemoveSkill, onReorderSkills }) {
   const [ref, visible] = useReveal();
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState('');
   const [group, setGroup] = useState('');
   const [error, setError] = useState('');
+
+  const { getDragProps, getDropProps, overIndex } = useDragReorder(onReorderSkills || (() => {}));
+  const canReorder = isOwner && typeof onReorderSkills === 'function';
 
   function handleAddSkill() {
     if (!name.trim()) {
@@ -104,6 +115,12 @@ export default function Skills({ skills, isOwner, onAddSkill, onRemoveSkill }) {
         </div>
       ) : null}
 
+      {canReorder && (
+        <p className="reorder-hint">
+          <DragIcon /> Drag cards to reorder
+        </p>
+      )}
+
       <div className="skills-grid">
         {skills.map((skill, i) => (
           <SkillCard
@@ -111,6 +128,9 @@ export default function Skills({ skills, isOwner, onAddSkill, onRemoveSkill }) {
             skill={skill}
             delayIndex={i}
             isOwner={isOwner}
+            isOver={canReorder && overIndex === i}
+            dragProps={canReorder ? getDragProps(i) : {}}
+            dropProps={canReorder ? getDropProps(i) : {}}
             onRemove={(id) => {
               const confirmed = window.confirm('Remove this skill?');
               if (confirmed) onRemoveSkill(id);
@@ -119,5 +139,35 @@ export default function Skills({ skills, isOwner, onAddSkill, onRemoveSkill }) {
         ))}
       </div>
     </section>
+  );
+}
+
+function DragHandleIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="9" cy="6" r="1.5" />
+      <circle cx="15" cy="6" r="1.5" />
+      <circle cx="9" cy="12" r="1.5" />
+      <circle cx="15" cy="12" r="1.5" />
+      <circle cx="9" cy="18" r="1.5" />
+      <circle cx="15" cy="18" r="1.5" />
+    </svg>
+  );
+}
+
+function DragIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      style={{ display: 'inline', marginRight: 5, verticalAlign: 'middle' }}
+      aria-hidden="true"
+    >
+      <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

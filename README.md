@@ -1,169 +1,371 @@
-# Kaivalya Thombare — Portfolio
+<div align="center">
 
-A dark, animated, single-page portfolio built with React + Vite and plain CSS
-(no animation libraries), deployed on Vercel with serverless API routes for
-edit access, content storage, and file uploads.
+<!-- Animated banner using SVG -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=Kaivalya%20Thombare&fontSize=50&fontColor=fff&animation=twinkling&fontAlignY=35&desc=Portfolio%20%E2%80%94%20Built%20Different&descAlignY=60&descSize=18" width="100%" />
 
-## How editing works now
+<br/>
 
-There is no separate admin login page anymore. The site always loads as a
-normal visitor would see it. To edit:
+<!-- Typing animation badge -->
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&pause=1000&color=5CE1E6&center=true&vCenter=true&width=600&lines=React+%2B+Vite+%2B+Vercel+Serverless;Dark+%26+Animated+Single-Page+Portfolio;Scroll+%E2%80%94+Parallax+%E2%80%94+Game-like+Feel)](https://git.io/typing-svg)
 
-1. Scroll to the very bottom of the page (the footer).
-2. Click the small `·` dot next to the copyright line — it's deliberately
-   subtle, it's not meant to be noticed by visitors.
-3. Enter your passphrase (set as `OWNER_PASSPHRASE`, see below — no
-   username, just one shared secret).
-4. You're now in Edit Mode: every section shows "+ Add..." / "Edit" /
-   "Remove" controls. Changes save to the database immediately — no code
-   edits, no redeploy.
-5. Click "Exit edit mode" in the footer when you're done.
+<br/>
 
-Edit Mode is protected by a signed, `HttpOnly` session cookie that expires
-after 12 hours — it can't be read or forged from the browser console.
+<p align="center">
+  <img src="https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/Vite-5.4-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vercel-Deployed-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+  <img src="https://img.shields.io/badge/Upstash-Redis-00C389?style=for-the-badge&logo=redis&logoColor=white" />
+  <img src="https://img.shields.io/badge/CSS-No_Framework-FF6FAE?style=for-the-badge&logo=css3&logoColor=white" />
+</p>
 
-## Where your data lives
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-8B7CF6?style=flat-square" />
+  <img src="https://img.shields.io/badge/Status-Live-5CE1E6?style=flat-square&logo=statuspage" />
+  <img src="https://img.shields.io/badge/PRs-Welcome-FF6FAE?style=flat-square" />
+</p>
 
-Content (profile, skills, projects, achievements, gallery) is stored in an
-**Upstash Redis** database attached to the Vercel project. Uploaded images
-and PDFs go to **Vercel Blob** storage. Both are read/written only through
-the `/api/*` serverless functions — never directly from the browser.
+</div>
 
-`src/data.js` is still there as the **starting content** shown before you've
-ever saved anything through Edit Mode (or if the database is ever
-unreachable). Once you make your first edit, the database takes over and
-`src/data.js` is no longer read for that content.
+---
 
-Contact-form messages are stored the same way (`portfolio:messages` key) so
-the Messages panel (visible only in Edit Mode) works from any device, not
-just the browser that received them.
+## ✦ What This Is
 
-## Required environment variables
+A **dark, animated, game-feel single-page portfolio** — no animation libraries, no UI frameworks, just React, plain CSS, and a few clever scroll tricks. Built to feel like scrolling through a scene, not reading a document.
 
-Set these in **Vercel → Project → Settings → Environment Variables**
-(never prefix them with `VITE_` — that would ship them to every visitor's
-browser):
+Every section you scroll past **animates in and back out** as you move through the page. A HUD-style progress bar tracks your position. Ambient parallax orbs drift at different depths behind the content.
 
-| Variable | What it's for |
-|---|---|
-| `OWNER_PASSPHRASE` | The single passphrase that unlocks Edit Mode. Make it long and unique. |
-| `AUTH_SECRET` | Random string used to sign the session cookie. Generate with `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
-| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Added automatically when you attach an Upstash Redis database (see below). |
-| `BLOB_READ_WRITE_TOKEN` | Added automatically when you create a Blob store (see below). |
+And the whole site is **live-editable** from a hidden owner panel — add projects, reorder cards, upload images — all without touching code or redeploying.
 
-## Setting up the database and file storage on Vercel
+---
 
-1. Push this project to a GitHub repo and import it into Vercel
-   (**Add New Project** → select the repo). Framework preset: **Vite**,
-   auto-detected.
-2. Before or after the first deploy, go to your project's **Storage** tab:
-   - **Add a Redis database:** click **Marketplace Database Providers** →
-     **Upstash** → create a Redis database → connect it to this project.
-     This sets `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`
-     automatically.
-   - **Add a Blob store:** click **Create Database** → **Blob** → connect
-     it to this project. This sets `BLOB_READ_WRITE_TOKEN` automatically.
-3. Go to **Settings → Environment Variables** and add `OWNER_PASSPHRASE`
-   and `AUTH_SECRET` (values of your choice — see table above).
-4. Redeploy once (Deployments tab → ⋯ → Redeploy) so the new environment
-   variables take effect.
+## ✦ Feature Highlights
 
-Until you complete this, the site still works fully as a viewer would see
-it — Edit Mode will just show an error saying the database/passphrase
-isn't configured yet.
+<table>
+<tr>
+<td width="50%">
 
-## Turning on the contact form email
+### 🎮 Scroll Experience
+- Game-like scrolling — sections animate **in and out** as you scroll
+- Continuous parallax depth layers that drift behind content
+- HUD progress bar (cyan glow) pinned to the very top edge
+- Direction-aware reveal: enter slides up, exit retreats upward
+- `prefers-reduced-motion` respected — no motion for users who need it
 
-The form posts to [Formspree](https://formspree.io) (free tier is fine),
-which is what actually emails you — nothing in this codebase sends email
-directly.
+</td>
+<td width="50%">
 
-1. Create a free Formspree account **using itskv5107.kt@gmail.com**
-   (or whichever inbox you want messages delivered to) and make a new
-   form.
-2. Copy the endpoint URL it gives you (looks like
-   `https://formspree.io/f/abcdEFGh`).
-3. Paste it into `contact.formEndpoint` in `src/data.js`, commit, and push.
+### 🔐 Owner / Edit Mode
+- Hidden `·` dot in the footer — invisible to visitors
+- Passphrase-protected session (signed `HttpOnly` cookie, 12h TTL)
+- Add, remove, and **drag to reorder** items in every section
+- Changes save to Redis instantly — no redeploy, works from any device
+- All edit controls are invisible to non-owners
 
-Until you do this, submissions still land in the in-site Messages panel
-(visible in Edit Mode), but nothing is emailed.
+</td>
+</tr>
+<tr>
+<td width="50%">
 
-## Run it locally
+### 🗄️ Backend & Storage
+- Vercel Serverless Functions (`/api/*`) — no Express, no server
+- Content stored in **Upstash Redis** (free tier)
+- Images & PDFs stored in **Vercel Blob** (public CDN)
+- Contact messages saved to Redis and viewable in the Messages panel
+- Session cookie signed with `AUTH_SECRET` — tamper-proof
 
-The frontend alone:
-```bash
-npm install
-npm run dev
+</td>
+<td width="50%">
+
+### 🎨 Design System
+- Pure CSS design tokens — one file to re-theme everything
+- Accent palette: Cyan `#5CE1E6` · Violet `#8B7CF6` · Pink `#FF6FAE`
+- Dark background `#08090b` with layered surfaces
+- `Inter` display font + `JetBrains Mono` for code/labels
+- All animations defined in CSS, zero JS animation libraries
+
+</td>
+</tr>
+</table>
+
+---
+
+## ✦ Tech Stack
+
 ```
-Opens at `http://localhost:5173` — content, login, saving, and uploads
-won't work here since those need the `/api` functions.
+┌─────────────────────────────────────────────────────────────────┐
+│                        Frontend                                 │
+│  React 18  ·  Vite 5  ·  Plain CSS  ·  IntersectionObserver   │
+├─────────────────────────────────────────────────────────────────┤
+│                         Backend                                 │
+│  Vercel Serverless Functions  ·  HttpOnly Cookies              │
+├─────────────────────────────────────────────────────────────────┤
+│                         Storage                                 │
+│  Upstash Redis  ·  Vercel Blob (images/PDFs)                   │
+├─────────────────────────────────────────────────────────────────┤
+│                       Integrations                              │
+│  Formspree (contact email)  ·  Vercel CLI (local dev)          │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-To test the full stack locally (recommended), install the Vercel CLI and
-pull your real environment variables once:
+---
+
+## ✦ Project Structure
+
+```
+📁 portfolio/
+│
+├── 📁 api/                         ← Vercel Serverless Functions
+│   ├── auth.js                     ← POST/DELETE: passphrase check + session cookie
+│   ├── data.js                     ← GET (public) / PUT (owner): portfolio content
+│   ├── messages.js                 ← POST (public) / GET (owner): contact messages
+│   └── upload.js                   ← POST (owner): image/PDF → Vercel Blob
+│
+├── 📁 lib/
+│   ├── auth.js                     ← Cookie signing, passphrase verification
+│   └── redis.js                    ← Upstash Redis client wrapper
+│
+├── 📁 src/
+│   ├── App.jsx                     ← Root: all sections, content state, commit()
+│   ├── data.js                     ← Default content (shown before first DB save)
+│   │
+│   ├── 📁 components/
+│   │   ├── Hero.jsx                ← Animated gradient orb + photo
+│   │   ├── About.jsx               ← Bio + editable stats row
+│   │   ├── Skills.jsx              ← Skill cards, draggable in owner mode
+│   │   ├── Projects.jsx            ← Horizontal gallery + upload form
+│   │   ├── Gallery.jsx             ← Shared carousel (Projects, Achievements, Photos)
+│   │   ├── Achievements.jsx        ← Certificate image gallery
+│   │   ├── PhotoGallery.jsx        ← Event/workshop photo gallery
+│   │   ├── Contact.jsx             ← Links + working Formspree contact form
+│   │   ├── Messages.jsx            ← Owner-only saved message viewer
+│   │   ├── OwnerAccess.jsx         ← Hidden unlock button + passphrase modal
+│   │   ├── Navbar.jsx              ← Sticky nav with section links
+│   │   ├── Footer.jsx              ← Copyright + exit edit mode
+│   │   └── WelcomeIntro.jsx        ← First-load intro animation
+│   │
+│   ├── 📁 hooks/
+│   │   ├── useReveal.js            ← Direction-aware scroll reveal (enter + exit)
+│   │   ├── useScrollProgress.js    ← Writes --scroll-y / --scroll-progress to CSS
+│   │   ├── useCarousel.js          ← Scroll progress + arrow navigation
+│   │   └── useDragSort.js          ← Drag-and-drop reorder for lists + grids
+│   │
+│   ├── 📁 lib/
+│   │   └── api.js                  ← fetch() wrappers for all /api/* routes
+│   │
+│   └── 📁 styles/
+│       ├── index.css               ← Design tokens, resets, scroll reveal, drag UI
+│       └── components.css          ← Per-section and per-component styles
+│
+├── 📁 public/
+│   ├── certificates/               ← Placeholder certificate SVGs
+│   └── projects/                   ← Placeholder project SVGs
+│
+├── .env                            ← Template — copy to .env.local, fill in values
+├── vite.config.js
+└── package.json
+```
+
+---
+
+## ✦ Local Development
+
+### Prerequisites
+
+- Node.js 18+
+- Vercel CLI (`npm i -g vercel`)
+- A Vercel account with the project linked
+
+### Quick Start
+
 ```bash
-npm install -g vercel
+# 1. Install dependencies
+npm install
+
+# 2. Link to your Vercel project (one-time)
 vercel link
+
+# 3. Pull real environment variables from Vercel
 vercel env pull .env.local
+
+# 4. Start the full local stack (Vite + serverless functions)
 vercel dev
 ```
-`vercel dev` serves the Vite frontend and the `/api` functions together.
 
-## Deploying to Vercel
+> ⚠️ `npm run dev` starts Vite only — the `/api` routes won't work.
+> Always use `vercel dev` for the full experience.
 
-1. Push this project to a GitHub repo.
-2. Go to [vercel.com](https://vercel.com) → **Add New Project** → import
-   the repo. Build command `npm run build`, output directory `dist` —
-   Vercel fills these in automatically.
-3. Complete the **Storage** and **environment variable** setup above.
-4. Click **Deploy**. Every future push redeploys automatically — but you
-   won't need to push for content changes anymore, only for design/code
-   changes.
+```bash
+# Frontend only (content/login/uploads won't work)
+npm run dev     # → http://localhost:5173
 
-## A note on the previous version
+# Full stack (recommended)
+vercel dev      # → http://localhost:3000
+```
 
-An earlier version of this project used a `VITE_OWNER_USERNAME` /
-`VITE_OWNER_PASSWORD` pair stored in `.env.example`, which is how a
-plaintext-looking username and password ended up committed to the repo —
-exactly the risk you flagged. If this repo was ever pushed to a public (or
-even private) GitHub remote, treat that old password as compromised: it's
-gone from this version entirely, but it may still be recoverable from git
-history unless that history is rewritten or the repo is deleted/recreated.
+---
 
-## Project structure
+## ✦ Environment Variables
+
+Set these in **Vercel → Project → Settings → Environment Variables**.
+Never prefix with `VITE_` — that would expose them to every visitor's browser.
+
+| Variable | Required | Description |
+|---|:---:|---|
+| `OWNER_PASSPHRASE` | ✅ | The passphrase that unlocks Edit Mode. Make it long and unique. |
+| `AUTH_SECRET` | ✅ | Signs the session cookie. Generate: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
+| `UPSTASH_REDIS_REST_URL` | ✅ | Auto-added when you attach an Upstash Redis database on Vercel. |
+| `UPSTASH_REDIS_REST_TOKEN` | ✅ | Auto-added alongside the URL above. |
+| `BLOB_READ_WRITE_TOKEN` | ✅ | Auto-added when you create a Vercel Blob store. |
+
+For local dev, run `vercel env pull .env.local` — this fills everything in automatically from your Vercel project.
+
+---
+
+## ✦ First-Time Vercel Setup
 
 ```
-api/
-  auth.js              ← POST: check passphrase, set session cookie. DELETE: log out
-  data.js              ← GET (public): portfolio content. PUT (owner-only): save it
-  messages.js          ← POST (public): save a contact-form message. GET (owner-only): list them
-  upload.js            ← POST (owner-only): upload an image/PDF to Vercel Blob
-lib/
-  auth.js              ← cookie signing/verification, passphrase check
-  redis.js             ← Upstash Redis client
-src/
-  data.js              ← starting content (see "Where your data lives")
-  App.jsx              ← assembles all sections, owns the content state
-  lib/api.js            ← fetch wrappers for the /api functions
-  components/
-    Navbar.jsx
-    Hero.jsx            ← animated gradient orb + welcome photo
-    About.jsx
-    Skills.jsx          ← HUD-style level bars
-    Gallery.jsx         ← shared horizontal-scroll carousel (used by Projects, Achievements, PhotoGallery)
-    Projects.jsx
-    Achievements.jsx     ← certificates/awards — image gallery, nothing to download
-    PhotoGallery.jsx      ← general photos — same features as Achievements, separate section
-    Contact.jsx           ← links + working form (posts to Formspree + saves to Messages)
-    Messages.jsx           ← owner-only view of saved contact messages
-    OwnerAccess.jsx         ← hidden footer button + passphrase modal
-    Footer.jsx
-  hooks/
-    useReveal.js          ← scroll-triggered fade-in-up
-    useCarousel.js         ← carousel scroll progress + arrow nav
-  styles/
-    index.css              ← design tokens, resets, shared classes
-    components.css          ← per-section styles
-public/
-  certificates/             ← default/placeholder certificate images
-  projects/                  ← default/placeholder project screenshots
+1. Push this repo to GitHub
+         │
+         ▼
+2. vercel.com → Add New Project → import the repo
+   Framework: Vite (auto-detected)
+   Build command: npm run build
+   Output dir: dist
+         │
+         ▼
+3. Project → Storage tab
+   ├── Marketplace Database Providers → Upstash → Create Redis → Connect
+   └── Create Database → Blob → Public access → ✅ Add read-write token
+         │
+         ▼
+4. Settings → Environment Variables
+   ├── OWNER_PASSPHRASE = <your-passphrase>
+   └── AUTH_SECRET = <random-hex-string>
+         │
+         ▼
+5. Deployments → ⋯ → Redeploy
+         │
+         ▼
+6. Done ✦
 ```
+
+---
+
+## ✦ Edit Mode — How to Use
+
+```
+Scroll to the very bottom of your live site
+              │
+              ▼
+Click the small · dot next to the copyright line
+(it's invisible to visitors — intentionally)
+              │
+              ▼
+Enter your OWNER_PASSPHRASE
+              │
+              ▼
+Edit Mode is now active
+  ├── Every section shows "+ Add / Remove" controls
+  ├── Drag the ⠿ handle to reorder cards
+  ├── Upload images/PDFs directly from the form
+  └── All changes save to Redis instantly
+              │
+              ▼
+Click "Exit edit mode" in the footer when done
+```
+
+> Session is protected by a signed `HttpOnly` cookie — 12 hour TTL.
+> It cannot be read or forged from the browser console.
+
+---
+
+## ✦ Contact Form Setup (Formspree)
+
+The contact form emails you via [Formspree](https://formspree.io) — free tier is enough.
+
+```bash
+# 1. Create a Formspree account at formspree.io
+# 2. Create a new form — name it "Portfolio Contact"
+# 3. Copy the endpoint: https://formspree.io/f/xxxxxxxx
+# 4. Paste it into src/data.js:
+
+export const contact = {
+  formEndpoint: "https://formspree.io/f/xxxxxxxx",  # ← here
+  ...
+};
+
+# 5. Commit and push
+```
+
+> Until Formspree is connected, contact messages are still saved to Redis
+> and visible in the **Messages panel** (owner mode only).
+
+---
+
+## ✦ Deployment
+
+Every push to `main` redeploys automatically via Vercel's GitHub integration.
+You only need to push for **design or code changes** — content is live-edited
+through the owner panel and saved directly to the database.
+
+```bash
+git add .
+git commit -m "update design"
+git push origin main
+# → Vercel picks it up and redeploys in ~30s
+```
+
+---
+
+## ✦ Scroll Animation System
+
+The scroll engine is built entirely without animation libraries:
+
+```
+useScrollProgress()
+  └── writes --scroll-y and --scroll-progress to <html> every rAF frame
+        │
+        ├── CSS parallax layers read --scroll-y to drift at 3 different speeds
+        ├── HUD progress bar width = calc(var(--scroll-progress) * 100%)
+        └── Hero orb / grid translate with the scroll for depth
+
+useReveal(options)
+  └── IntersectionObserver watches each element
+        ├── Scrolling DOWN → .is-visible added (slides up, fades in)
+        ├── Scrolling UP   → .is-visible removed (retreats upward, fades out)
+        └── once: true     → reveals once and stays (used on Contact / last section)
+```
+
+---
+
+## ✦ Security Notes
+
+- The `OWNER_PASSPHRASE` is checked **server-side only** — never sent to the browser
+- Session cookie is `HttpOnly; Secure; SameSite=Strict` — unreadable from JS
+- All write endpoints (`PUT /api/data`, `POST /api/upload`) verify the cookie before acting
+- `BLOB_READ_WRITE_TOKEN` lives only in server environment — never in the client bundle
+- Never prefix secrets with `VITE_` — anything prefixed that way is shipped to every visitor
+
+---
+
+## ✦ License
+
+```
+MIT License — use, modify, and deploy freely.
+If you build something cool with it, a ⭐ is always appreciated.
+```
+
+---
+
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=120&section=footer&animation=twinkling" width="100%" />
+
+**Built by [Kaivalya Thombare](https://www.linkedin.com/in/kaivalya-thombare-930a1b386)**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/kaivalya-thombare-930a1b386)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/kaivalyathombare-5107)
+
+*Computer Engineering Student · Mumbai, India · Open to Opportunities*
+
+</div>

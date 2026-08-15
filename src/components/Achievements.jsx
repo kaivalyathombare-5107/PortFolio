@@ -3,7 +3,7 @@ import useReveal from '../hooks/useReveal.js';
 import Gallery from './Gallery.jsx';
 import { uploadImage } from '../lib/api.js';
 
-export default function Achievements({ achievements, isOwner, onAddAchievement, onRemoveAchievement }) {
+export default function Achievements({ achievements, isOwner, onAddAchievement, onRemoveAchievement, onReorderAchievements }) {
   const [ref, visible] = useReveal();
   const [title, setTitle] = useState('');
   const [issuer, setIssuer] = useState('');
@@ -142,6 +142,8 @@ export default function Achievements({ achievements, isOwner, onAddAchievement, 
 
       <Gallery
         items={achievements}
+        isOwner={isOwner}
+        onReorder={onReorderAchievements}
         renderCard={(item) => (
           <>
             <div className="card-media">

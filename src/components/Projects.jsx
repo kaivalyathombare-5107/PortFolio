@@ -3,7 +3,7 @@ import useReveal from '../hooks/useReveal.js';
 import Gallery from './Gallery.jsx';
 import { uploadImage } from '../lib/api.js';
 
-export default function Projects({ projects, isOwner, onAddProject, onRemoveProject }) {
+export default function Projects({ projects, isOwner, onAddProject, onRemoveProject, onReorderProjects }) {
   const [ref, visible] = useReveal();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -143,6 +143,8 @@ export default function Projects({ projects, isOwner, onAddProject, onRemoveProj
 
       <Gallery
         items={projects}
+        isOwner={isOwner}
+        onReorder={onReorderProjects}
         renderCard={(project) => (
           <>
             <div className="card-media">

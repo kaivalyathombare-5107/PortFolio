@@ -91,7 +91,7 @@ export const gallery = [
 export const contact = {
   email: "itskv5107.kt@gmail.com",
   linkedin: "https://www.linkedin.com/in/kaivalya-thombare-930a1b386",
-  github: "https://github.com/your-username", // placeholder
+  github: "https://github.com/kaivalyathombare-5107", // placeholder
   resumeUrl: "", // optional: link to a hosted resume PDF/image
   // Formspree (or any form-endpoint service) URL for the working contact
   // form. Sign up free at https://formspree.io using itskv5107.kt@gmail.com,
@@ -99,5 +99,5 @@ export const contact = {
   // emailed straight to that inbox. Until you do this, submissions are
   // still saved to the in-site Messages panel (visible in Edit Mode) but
   // nothing is emailed.
-  formEndpoint: "https://formspree.io/f/your-form-id",
+  formEndpoint: "https://formspree.io/f/maewogwk",
 };

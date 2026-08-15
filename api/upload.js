@@ -2,12 +2,32 @@ import { put } from '@vercel/blob';
 import { isOwnerRequest } from '../lib/auth.js';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'application/pdf'];
-const MAX_BYTES = 4.5 * 1024 * 1024; // Vercel serverless function body limit
+const MAX_BYTES = 4.5 * 1024 * 1024;
 
 function sanitizeFilename(name) {
   return String(name || 'upload')
     .replace(/[^a-zA-Z0-9._-]/g, '_')
     .slice(0, 80);
+}
+
+// vercel dev doesn't auto-parse raw binary bodies — we must read the
+// request stream ourselves to get the actual file bytes.
+function readRawBody(req) {
+  return new Promise((resolve, reject) => {
+    // Already parsed by the runtime (Buffer or string)
+    if (req.body && Buffer.isBuffer(req.body) && req.body.length > 0) {
+      return resolve(req.body);
+    }
+    if (req.body && typeof req.body === 'string' && req.body.length > 0) {
+      return resolve(Buffer.from(req.body, 'binary'));
+    }
+
+    // Read the raw stream
+    const chunks = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
+  });
 }
 
 export default async function handler(req, res) {
@@ -31,8 +51,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Only JPG, PNG, WEBP, SVG, or PDF uploads are allowed.' });
   }
 
-  const buffer = Buffer.isBuffer(req.body) ? req.body : Buffer.from(req.body || '');
-  if (!buffer.length) {
+  let buffer;
+  try {
+    buffer = await readRawBody(req);
+  } catch (err) {
+    return res.status(400).json({ error: 'Failed to read uploaded file.' });
+  }
+
+  if (!buffer || buffer.length === 0) {
     return res.status(400).json({ error: 'Empty file' });
   }
   if (buffer.length > MAX_BYTES) {
@@ -55,3 +81,11 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Upload failed' });
   }
 }
+
+// Tell Vercel's serverless runtime NOT to pre-parse the body — we need
+// the raw binary stream so image bytes aren't corrupted or truncated.
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};

@@ -91,14 +91,29 @@ export default function App() {
 
   const updateProfile = (updates) => commit({ ...data, profile: { ...data.profile, ...updates } });
 
+  // ── reorder helper ────────────────────────────────────────────────────
+  function reorder(arr, from, to) {
+    const next = [...arr];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    return next;
+  }
+
+  // ── skills ────────────────────────────────────────────────────────────
   const addSkill = (skill) =>
     commit({ ...data, skills: [...data.skills, { id: `skill-${Date.now()}`, ...skill }] });
   const removeSkill = (id) => commit({ ...data, skills: data.skills.filter((s) => s.id !== id) });
+  const reorderSkills = (from, to) =>
+    commit({ ...data, skills: reorder(data.skills, from, to) });
 
+  // ── projects ──────────────────────────────────────────────────────────
   const addProject = (project) =>
     commit({ ...data, projects: [...data.projects, { id: `project-${Date.now()}`, ...project }] });
   const removeProject = (id) => commit({ ...data, projects: data.projects.filter((p) => p.id !== id) });
+  const reorderProjects = (from, to) =>
+    commit({ ...data, projects: reorder(data.projects, from, to) });
 
+  // ── achievements ──────────────────────────────────────────────────────
   const addAchievement = (achievement) =>
     commit({
       ...data,
@@ -106,10 +121,15 @@ export default function App() {
     });
   const removeAchievement = (id) =>
     commit({ ...data, achievements: data.achievements.filter((a) => a.id !== id) });
+  const reorderAchievements = (from, to) =>
+    commit({ ...data, achievements: reorder(data.achievements, from, to) });
 
+  // ── gallery ───────────────────────────────────────────────────────────
   const addPhoto = (photo) =>
     commit({ ...data, gallery: [...data.gallery, { id: `photo-${Date.now()}`, ...photo }] });
   const removePhoto = (id) => commit({ ...data, gallery: data.gallery.filter((p) => p.id !== id) });
+  const reorderGallery = (from, to) =>
+    commit({ ...data, gallery: reorder(data.gallery, from, to) });
 
   if (mode === 'welcome') {
     return <WelcomeIntro profile={data.profile} onComplete={() => setMode('viewer')} />;
@@ -128,24 +148,33 @@ export default function App() {
       <Navbar profile={data.profile} isOwner={isOwner} />
       <Hero profile={data.profile} />
       <About profile={data.profile} isOwner={isOwner} onUpdateProfile={updateProfile} />
-      <Skills skills={data.skills} isOwner={isOwner} onAddSkill={addSkill} onRemoveSkill={removeSkill} />
+      <Skills
+        skills={data.skills}
+        isOwner={isOwner}
+        onAddSkill={addSkill}
+        onRemoveSkill={removeSkill}
+        onReorderSkills={reorderSkills}
+      />
       <Projects
         projects={data.projects}
         isOwner={isOwner}
         onAddProject={addProject}
         onRemoveProject={removeProject}
+        onReorderProjects={reorderProjects}
       />
       <Achievements
         achievements={data.achievements}
         isOwner={isOwner}
         onAddAchievement={addAchievement}
         onRemoveAchievement={removeAchievement}
+        onReorderAchievements={reorderAchievements}
       />
       <PhotoGallery
         gallery={data.gallery}
         isOwner={isOwner}
         onAddPhoto={addPhoto}
         onRemovePhoto={removePhoto}
+        onReorderGallery={reorderGallery}
       />
       {isOwner ? <Messages /> : <Contact />}
       {isOwner && saveError ? (
