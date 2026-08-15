@@ -182,6 +182,7 @@ export default function App() {
         <p className="save-error-banner">{saveError}</p>
       ) : null}
       <Footer profile={data.profile} isOwner={isOwner} onUnlock={handleUnlock} onExit={handleExit} />
+      <Analytics />
     </>
   );
 }
