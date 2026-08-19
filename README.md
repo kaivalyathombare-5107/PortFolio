@@ -55,7 +55,6 @@ And the whole site is **live-editable** from a hidden owner panel — add projec
 <td width="50%">
 
 ### 🔐 Owner / Edit Mode
-- Hidden `·` dot in the footer — invisible to visitors
 - Passphrase-protected session (signed `HttpOnly` cookie, 12h TTL)
 - Add, remove, and **drag to reorder** items in every section
 - Changes save to Redis instantly — no redeploy, works from any device
