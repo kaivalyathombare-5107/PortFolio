@@ -86,7 +86,7 @@ export default function Contact() {
             <span>
               <span className="contact-link-label">GitHub</span>
               <br />
-              View repositories
+              Kaivalya Thombare
             </span>
             <span>↗</span>
           </a>
