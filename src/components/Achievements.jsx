@@ -3,8 +3,71 @@ import useReveal from '../hooks/useReveal.js';
 import Gallery from './Gallery.jsx';
 import { uploadImage } from '../lib/api.js';
 
-export default function Achievements({ achievements, isOwner, onAddAchievement, onRemoveAchievement, onReorderAchievements }) {
+// ── Inline edit panel for a single achievement card ──────────────────────────
+function AchievementEditPanel({ item, onSave, onCancel }) {
+  const [title, setTitle] = useState(item.title);
+  const [issuer, setIssuer] = useState(item.issuer || '');
+  const [date, setDate] = useState(item.date || '');
+  const [error, setError] = useState('');
+
+  function handleSave() {
+    if (!title.trim()) {
+      setError('Title is required.');
+      return;
+    }
+    onSave({
+      ...item,
+      title: title.trim(),
+      issuer: issuer.trim(),
+      date: date.trim(),
+    });
+  }
+
+  return (
+    <div className="project-inline-edit">
+      <div className="project-form-grid">
+        <div className="form-field">
+          <label>Title</label>
+          <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        </div>
+        <div className="form-field">
+          <label>Issuer</label>
+          <input value={issuer} onChange={(e) => setIssuer(e.target.value)} />
+        </div>
+        <div className="form-field">
+          <label>Date</label>
+          <input
+            placeholder="e.g. Jul 2026"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
+      </div>
+      {error ? <p className="form-status form-status-error">{error}</p> : null}
+      <div className="inline-edit-actions">
+        <button type="button" className="btn btn-primary" onClick={handleSave}>
+          Save changes
+        </button>
+        <button type="button" className="btn btn-ghost" onClick={onCancel}>
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Main Achievements section ─────────────────────────────────────────────────
+export default function Achievements({
+  achievements,
+  isOwner,
+  onAddAchievement,
+  onRemoveAchievement,
+  onUpdateAchievement,
+  onReorderAchievements,
+}) {
   const [ref, visible] = useReveal();
+
+  // Add-achievement form state
   const [title, setTitle] = useState('');
   const [issuer, setIssuer] = useState('');
   const [date, setDate] = useState('');
@@ -12,6 +75,9 @@ export default function Achievements({ achievements, isOwner, onAddAchievement, 
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  // Track which card (by id) is in edit mode
+  const [editingId, setEditingId] = useState(null);
 
   function handleFileChange(event) {
     const selected = event.target.files?.[0];
@@ -153,21 +219,45 @@ export default function Achievements({ achievements, isOwner, onAddAchievement, 
               <div className="card-body-top">
                 <h3 className="card-title">{item.title}</h3>
                 {isOwner ? (
-                  <button
-                    type="button"
-                    className="item-remove-btn card-remove-btn"
-                    onClick={() => {
-                      const confirmed = window.confirm('Remove this achievement?');
-                      if (confirmed) onRemoveAchievement(item.id);
-                    }}
-                  >
-                    Remove
-                  </button>
+                  <div className="card-admin-actions">
+                    <button
+                      type="button"
+                      className="item-edit-btn"
+                      onClick={() =>
+                        setEditingId(editingId === item.id ? null : item.id)
+                      }
+                    >
+                      {editingId === item.id ? 'Cancel' : 'Edit'}
+                    </button>
+                    <button
+                      type="button"
+                      className="item-remove-btn card-remove-btn"
+                      onClick={() => {
+                        const confirmed = window.confirm('Remove this achievement?');
+                        if (confirmed) onRemoveAchievement(item.id);
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 ) : null}
               </div>
-              <p className="card-meta">
-                {[item.issuer, item.date].filter(Boolean).join(' · ')}
-              </p>
+
+              {/* Inline edit panel */}
+              {isOwner && editingId === item.id ? (
+                <AchievementEditPanel
+                  item={item}
+                  onSave={(updated) => {
+                    onUpdateAchievement(updated);
+                    setEditingId(null);
+                  }}
+                  onCancel={() => setEditingId(null)}
+                />
+              ) : (
+                <p className="card-meta">
+                  {[item.issuer, item.date].filter(Boolean).join(' · ')}
+                </p>
+              )}
             </div>
           </>
         )}

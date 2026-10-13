@@ -111,6 +111,8 @@ export default function App() {
   const addProject = (project) =>
     commit({ ...data, projects: [...data.projects, { id: `project-${Date.now()}`, ...project }] });
   const removeProject = (id) => commit({ ...data, projects: data.projects.filter((p) => p.id !== id) });
+  const updateProject = (updated) =>
+    commit({ ...data, projects: data.projects.map((p) => (p.id === updated.id ? updated : p)) });
   const reorderProjects = (from, to) =>
     commit({ ...data, projects: reorder(data.projects, from, to) });
 
@@ -122,6 +124,8 @@ export default function App() {
     });
   const removeAchievement = (id) =>
     commit({ ...data, achievements: data.achievements.filter((a) => a.id !== id) });
+  const updateAchievement = (updated) =>
+    commit({ ...data, achievements: data.achievements.map((a) => (a.id === updated.id ? updated : a)) });
   const reorderAchievements = (from, to) =>
     commit({ ...data, achievements: reorder(data.achievements, from, to) });
 
@@ -161,6 +165,7 @@ export default function App() {
         isOwner={isOwner}
         onAddProject={addProject}
         onRemoveProject={removeProject}
+        onUpdateProject={updateProject}
         onReorderProjects={reorderProjects}
       />
       <Achievements
@@ -168,6 +173,7 @@ export default function App() {
         isOwner={isOwner}
         onAddAchievement={addAchievement}
         onRemoveAchievement={removeAchievement}
+        onUpdateAchievement={updateAchievement}
         onReorderAchievements={reorderAchievements}
       />
       <PhotoGallery
