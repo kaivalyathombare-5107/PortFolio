@@ -439,4 +439,165 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: 999px;
   border: 1px solid var(--border);
   color: var(--text-secondary);
+  transition: border-color 0.25s var(--ease), color 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
+.tag:hover {
+  border-color: rgba(92, 225, 230, 0.5);
+  color: var(--accent-cyan);
+  box-shadow: 0 0 8px rgba(92, 225, 230, 0.15);
+}
+
+/* ============================================================================
+   HERO PARTICLE CANVAS
+   ============================================================================ */
+.hero-particle-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* ============================================================================
+   TEXT SCRAMBLE — hero role cycler
+   ============================================================================ */
+.text-scramble {
+  display: inline-block;
+  font-family: var(--font-mono);
+  letter-spacing: 0.01em;
+  color: var(--text-secondary);
+  min-height: 1.5em;
+}
+
+/* ============================================================================
+   CURSOR GLOW — ambient soft aura that follows mouse
+   ============================================================================ */
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 560px;
+  height: 560px;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(92, 225, 230, 0.065) 0%,
+    rgba(139, 124, 246, 0.045) 40%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  will-change: transform;
+  /* Hidden on touch-primary devices (phones/tablets with no hover) */
+}
+@media (hover: none) {
+  .cursor-glow { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cursor-glow { display: none; }
+}
+
+/* ============================================================================
+   SPOTLIGHT CARD — radial cursor-tracking illumination + 3-D tilt
+   ============================================================================ */
+
+/* Cards with spotlight get a pseudo-element overlay positioned at the cursor */
+.spotlight-card {
+  /* Custom properties updated by useSpotlight on every mousemove */
+  --spotlight-x: 50%;
+  --spotlight-y: 50%;
+  --spotlight-opacity: 0;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* The illumination overlay — a radial bloom centred on the mouse */
+.spotlight-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: var(--spotlight-opacity);
+  background: radial-gradient(
+    circle 180px at var(--spotlight-x) var(--spotlight-y),
+    rgba(92, 225, 230, 0.13) 0%,
+    rgba(139, 124, 246, 0.08) 45%,
+    transparent 70%
+  );
+  transition: opacity 0.3s ease;
+}
+
+/* Glowing border edge brightens slightly when spotlit */
+.spotlight-card:hover {
+  border-color: rgba(92, 225, 230, 0.32);
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(92, 225, 230, 0.1);
+}
+
+/* Skill cards specifically — ensure spotlight-overlay sits above content */
+.skill-card.spotlight-card .spotlight-overlay {
+  border-radius: var(--radius-sm);
+}
+
+@media (hover: none) {
+  /* Touch devices: disable spotlight entirely, keep basic card hover */
+  .spotlight-overlay { display: none; }
+  .spotlight-card { transform: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-card { transform: none !important; }
+}
+
+/* ============================================================================
+   BUTTON SHIMMER — subtle animated gradient sweep on primary buttons
+   ============================================================================ */
+@keyframes btnShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.btn-primary {
+  background-size: 200% auto;
+  background-image: linear-gradient(
+    135deg,
+    var(--accent-violet) 0%,
+    var(--accent-cyan) 40%,
+    var(--accent-violet) 70%,
+    var(--accent-cyan) 100%
+  );
+  animation: btnShimmer 4s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary { animation: none; }
+}
+
+/* ============================================================================
+   ABOUT FACT — glow effect on stat rows
+   ============================================================================ */
+.about-fact {
+  position: relative;
+  overflow: hidden;
+}
+.about-fact::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  opacity: 0;
+  background: radial-gradient(
+    circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+    rgba(92, 225, 230, 0.07),
+    transparent 65%
+  );
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.about-fact:hover::after {
+  opacity: 1;
+}

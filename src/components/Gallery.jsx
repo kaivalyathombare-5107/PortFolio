@@ -1,5 +1,34 @@
 import useCarousel from '../hooks/useCarousel.js';
 import useDragReorder from '../hooks/useDragReorder.js';
+import useSpotlight from '../hooks/useSpotlight.js';
+
+// Wraps each card in a spotlight-aware container
+function SpotlightCard({ item, index, canReorder, getDragProps, getDropProps, overIndex, renderCard }) {
+  const { ref, onMouseMove, onMouseLeave } = useSpotlight();
+
+  return (
+    <div
+      ref={ref}
+      className={`card spotlight-card${canReorder ? ' draggable-card' : ''}${
+        canReorder && overIndex === index ? ' drag-over' : ''
+      }`}
+      data-card
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      {...(canReorder ? getDragProps(index) : {})}
+      {...(canReorder ? getDropProps(index) : {})}
+    >
+      {/* Radial spotlight overlay — positioned via --spotlight-x / --spotlight-y */}
+      <div className="spotlight-overlay" aria-hidden="true" />
+      {canReorder && (
+        <div className="drag-handle" aria-hidden="true">
+          <DragHandleIcon />
+        </div>
+      )}
+      {renderCard(item)}
+    </div>
+  );
+}
 
 // Generic horizontal-scroll gallery. Pass `renderCard(item)` to control
 // what each card looks like — used by Projects, Achievements, and Gallery.
@@ -22,22 +51,16 @@ export default function Gallery({ items, renderCard, isOwner, onReorder }) {
       )}
       <div className="carousel-track" ref={trackRef}>
         {items.map((item, i) => (
-          <div
-            className={`card${canReorder ? ' draggable-card' : ''}${
-              canReorder && overIndex === i ? ' drag-over' : ''
-            }`}
-            data-card
+          <SpotlightCard
             key={item.id}
-            {...(canReorder ? getDragProps(i) : {})}
-            {...(canReorder ? getDropProps(i) : {})}
-          >
-            {canReorder && (
-              <div className="drag-handle" aria-hidden="true">
-                <DragHandleIcon />
-              </div>
-            )}
-            {renderCard(item)}
-          </div>
+            item={item}
+            index={i}
+            canReorder={canReorder}
+            getDragProps={getDragProps}
+            getDropProps={getDropProps}
+            overIndex={overIndex}
+            renderCard={renderCard}
+          />
         ))}
       </div>
 

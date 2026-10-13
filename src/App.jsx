@@ -12,6 +12,7 @@ import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
 import Messages from './components/Messages.jsx';
 import WelcomeIntro from './components/WelcomeIntro.jsx';
+import CursorGlow from './components/CursorGlow.jsx';
 import {
   profile as defaultProfile,
   skills as defaultSkills,
@@ -142,6 +143,7 @@ export default function App() {
 
   return (
     <>
+      <CursorGlow />
       <div className="scroll-hud" aria-hidden="true">
         <div className="scroll-hud-fill" />
       </div>

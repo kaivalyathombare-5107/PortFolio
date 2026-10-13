@@ -1,22 +1,34 @@
 import { useRef, useEffect, useState } from 'react';
 import useReveal from '../hooks/useReveal.js';
 import useDragReorder from '../hooks/useDragReorder.js';
+import useSpotlight from '../hooks/useSpotlight.js';
 
 // Each card observes itself so cards animate in independently as they
 // scroll into view. This prevents the glitch where stopping mid-section
 // causes all cards to flash simultaneously because they all shared one
 // parent observer.
 function SkillCard({ skill, delayIndex, isOwner, onRemove, dragProps, dropProps, isOver }) {
-  const [ref, visible] = useReveal();
+  const [revealRef, visible] = useReveal();
+  const { ref: spotRef, onMouseMove, onMouseLeave } = useSpotlight();
+
+  // Merge the two refs onto the same DOM node
+  function setRefs(node) {
+    revealRef.current = node;
+    spotRef.current = node;
+  }
 
   return (
     <div
-      ref={ref}
-      className={`skill-card reveal${visible ? ' is-visible' : ''}${isOwner ? ' draggable-card' : ''}${isOver ? ' drag-over' : ''}`}
+      ref={setRefs}
+      className={`skill-card spotlight-card reveal${visible ? ' is-visible' : ''}${isOwner ? ' draggable-card' : ''}${isOver ? ' drag-over' : ''}`}
       style={{ transitionDelay: visible ? `${delayIndex * 50}ms` : '0ms' }}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
       {...dragProps}
       {...dropProps}
     >
+      {/* Spotlight overlay — positioned by CSS vars set in useSpotlight */}
+      <div className="spotlight-overlay" aria-hidden="true" />
       {isOwner && (
         <div className="drag-handle skill-drag-handle" aria-hidden="true">
           <DragHandleIcon />
