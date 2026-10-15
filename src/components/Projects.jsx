@@ -2,6 +2,7 @@ import { useState } from 'react';
 import useReveal from '../hooks/useReveal.js';
 import Gallery from './Gallery.jsx';
 import { uploadImage } from '../lib/api.js';
+import { normalizeUrl } from '../lib/utils.js';
 
 // ── Inline edit panel for a single project card ──────────────────────────────
 function ProjectEditPanel({ project, onSave, onCancel }) {
@@ -17,14 +18,16 @@ function ProjectEditPanel({ project, onSave, onCancel }) {
       setError('Title and description are required.');
       return;
     }
+    const cleanWebsite = normalizeUrl(websiteLink);
+    const cleanGithub = normalizeUrl(githubLink);
     onSave({
       ...project,
       title: title.trim(),
       description: description.trim(),
       tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
-      githubLink: githubLink.trim(),
-      websiteLink: websiteLink.trim(),
-      link: websiteLink.trim(), // keep legacy `link` field in sync
+      githubLink: cleanGithub,
+      websiteLink: cleanWebsite,
+      link: cleanWebsite, // keep legacy `link` field in sync
     });
   }
 
@@ -130,14 +133,16 @@ export default function Projects({
     setError('');
     try {
       const url = await uploadImage(file);
+      const cleanWebsite = normalizeUrl(websiteLink);
+      const cleanGithub = normalizeUrl(githubLink);
       onAddProject({
         title: title.trim(),
         description: description.trim(),
         tags: tags.split(',').map((tag) => tag.trim()).filter(Boolean),
         image: url,
-        githubLink: githubLink.trim(),
-        websiteLink: websiteLink.trim(),
-        link: websiteLink.trim(), // legacy field kept in sync
+        githubLink: cleanGithub,
+        websiteLink: cleanWebsite,
+        link: cleanWebsite, // legacy field kept in sync
       });
       setTitle('');
       setDescription('');
@@ -317,7 +322,7 @@ export default function Projects({
                     <div className="card-links">
                       {project.githubLink ? (
                         <a
-                          href={project.githubLink}
+                          href={normalizeUrl(project.githubLink)}
                           target="_blank"
                           rel="noreferrer"
                           className="card-link-btn card-link-github"
@@ -327,7 +332,7 @@ export default function Projects({
                       ) : null}
                       {(project.websiteLink || project.link) ? (
                         <a
-                          href={project.websiteLink || project.link}
+                          href={normalizeUrl(project.websiteLink || project.link)}
                           target="_blank"
                           rel="noreferrer"
                           className="card-link-btn card-link-website"

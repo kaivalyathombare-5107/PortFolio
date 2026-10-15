@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { contact } from '../data.js';
 import useReveal from '../hooks/useReveal.js';
 import { submitContactMessage } from '../lib/api.js';
+import { normalizeUrl } from '../lib/utils.js';
 
 export default function Contact() {
   const [ref, visible] = useReveal();
@@ -66,7 +67,7 @@ export default function Contact() {
           </a>
           <a
             className="contact-link"
-            href={contact.linkedin}
+            href={normalizeUrl(contact.linkedin)}
             target="_blank"
             rel="noreferrer"
           >
@@ -79,7 +80,7 @@ export default function Contact() {
           </a>
           <a
             className="contact-link"
-            href={contact.github}
+            href={normalizeUrl(contact.github)}
             target="_blank"
             rel="noreferrer"
           >
@@ -93,7 +94,7 @@ export default function Contact() {
           {contact.resumeUrl ? (
             <a
               className="contact-link"
-              href={contact.resumeUrl}
+              href={normalizeUrl(contact.resumeUrl)}
               target="_blank"
               rel="noreferrer"
             >
